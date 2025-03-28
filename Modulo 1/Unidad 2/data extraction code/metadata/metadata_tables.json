@@ -1,0 +1,111 @@
+{
+    "customers": {
+        "customerNumber": {
+            "type": "INTEGER",
+            "nullable": false,
+            "default": null,
+            "primary_key": true,
+            "references": ""
+        },
+        "customerName": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "phone": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "addressLine1": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "addressLine2": {
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "city": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "province": {
+            "type": "VARCHAR(50)",
+            "nullable": true,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "postalCode": {
+            "type": "VARCHAR(15)",
+            "nullable": true,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "country": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "createdDate": {
+            "type": "TIMESTAMP",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "updatedDate": {
+            "type": "TIMESTAMP",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        }
+    },
+    "payments": {
+        "customerNumber": {
+            "type": "INTEGER",
+            "nullable": false,
+            "default": null,
+            "primary_key": true,
+            "references": "customers.customerNumber"
+        },
+        "checkNumber": {
+            "type": "VARCHAR(50)",
+            "nullable": false,
+            "default": null,
+            "primary_key": true,
+            "references": ""
+        },
+        "paymentDate": {
+            "type": "DATE",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        },
+        "amount": {
+            "type": "DECIMAL(8, 2)",
+            "nullable": false,
+            "default": null,
+            "primary_key": false,
+            "references": ""
+        }
+    }
+}

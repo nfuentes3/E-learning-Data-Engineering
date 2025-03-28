@@ -1,0 +1,6 @@
+{
+    "payments": {
+        "incremental_column": "paymentDate",
+        "last_value": "2023-07-26"
+    }
+}
