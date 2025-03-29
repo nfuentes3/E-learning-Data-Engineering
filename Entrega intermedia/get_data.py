@@ -1,27 +1,10 @@
 import requests
-import datetime
 
 # La api a utilizar es la api del clima de AccuWeather: https://developer.accuweather.com/
 
 BASE_URL = "http://api.weatherapi.com/v1"  # URL base de la API
 
 API_KEY = "02b563c1944f4676b24200206251803"  # Api key
-
-# Genero una lista de ciudades a consultar
-ciudades = [
-    "Hurlingham",
-    "Ushuaia",
-    "La Falda",
-    "Tilcara",
-    "Bariloche",
-    "Posadas",
-    "Brasilia",
-    "Detroit",
-    "Paris",
-    "Verona",
-    "Berlin",
-    "London",
-]
 
 
 def obtener_metadatos(ciudad: str):
@@ -38,14 +21,7 @@ def obtener_metadatos(ciudad: str):
     try:
         respuesta = requests.get(url_endpoint)
         respuesta = respuesta.json()[0]
-        data = {  # Genero un diccionario con los metadatos necesarios
-            "ciudad": respuesta["name"],
-            "pais": respuesta["country"],
-            "estado": respuesta["region"],
-            "latitud": respuesta["lat"],
-            "longitud": respuesta["lon"],
-        }
-        return data
+        return respuesta
     except Exception as err:
         print(f"Error en la peticion: {err}")
 
@@ -66,7 +42,6 @@ def guardar_metadatos(lista_ciudades: list):
 
 def obtener_clima(ciudad):
     """Obtiene detalles del clima actual de la ciudad indicada.
-
     :param ciudad: Ciudad a consultar el clima actual
     :type ciudad: str
     :return: Diccionaro o JSON con los datos del clima
@@ -76,13 +51,21 @@ def obtener_clima(ciudad):
     url_endpoint = f"{BASE_URL}{endpoint}?key={API_KEY}&q={ciudad}&aqi=no&lang=es"
     respuesta = requests.get(url_endpoint)
     respuesta = respuesta.json()
-    data = {
-        "ciudad": respuesta["location"]["name"],
-        "pais": respuesta["location"]["country"],
-        "temperatura": respuesta["current"]["temp_c"],
-        "sensasion_termica": respuesta["current"]["feelslike_c"],
-        "humedad": respuesta["current"]["humidity"],
-        "condicion": respuesta["current"]["condition"]["text"],
-        "fecha_lectura": datetime.datetime.now().strftime("%d-%m-%Y %H:%M"),
-    }
+    data = respuesta["current"]
+    data["ciudad"] = ciudad
     return data
+
+
+def obtener_climas_todos(lista_ciudades: list):
+    """Obtiene el clima actual de todas las ciudades indicadas en la lista.
+
+    :param lista_ciudades: Lista de ciudades a consultar el clima actual
+    :type lista_ciudades: list
+    :return: Lista de diccionarios con los datos del clima de cada ciudad
+    :rtype: list
+    """
+    climas = []
+    for ciudad in lista_ciudades:
+        clima = obtener_clima(ciudad)
+        climas.append(clima)
+    return climas

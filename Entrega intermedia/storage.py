@@ -1,7 +1,6 @@
 import pandas as pd
-import pyarrow as pa
 from deltalake import write_deltalake, DeltaTable
-import pprint, datetime, os
+import os
 
 
 def crear_df(json, path=None):
@@ -16,6 +15,7 @@ def crear_df(json, path=None):
     """
     try:
         df = pd.json_normalize(json, path)
+        print(f"DataFrame creado con {len(df)} filas y {len(df.columns)} columnas")
         return df
     except Exception as err:
         print(f"No se pudo generar el DataFrame: {err}")
@@ -29,13 +29,18 @@ def crear_deltalake(datos, path):
     :param path: Ruta donde se crea el archivo Parquet del DeltaLake
     :type path: str
     """
-    df = pd.DataFrame(datos)
-    if not os.path.exists(path):
-        dl = write_deltalake(path, df, mode="ignore")
-        return dl
-    else:
-        dl = write_deltalake(path, df, mode="overwrite")
-        return dl
+    try:
+        df = pd.DataFrame(datos)
+        if not os.path.exists(path):
+            dl = write_deltalake(path, df, mode="ignore")
+            print(f"DeltaLake creado en {path}")
+            return dl
+        else:
+            dl = write_deltalake(path, df, mode="overwrite")
+            print(f"DeltaLake actualizado en {path}")
+            return dl
+    except Exception as err:
+        print(f"No se pudo crear el DeltaLake: {err}")
 
 
 def actualizar_deltalake(nuevo_df, ruta_origen, ruta_destino):
@@ -58,5 +63,7 @@ def actualizar_deltalake(nuevo_df, ruta_origen, ruta_destino):
 
         # Escribir el nuevo DataFrame en la ruta destino
         write_deltalake(ruta_destino, df_actualizado, mode="overwrite")
+        print(f"DeltaLake actualizado en {ruta_destino}")
+        return df_actualizado
     except Exception as err:
         print(f"No se pudo actualizar el DeltaLake: {err}")
