@@ -1,11 +1,9 @@
 # Segunda entrega intermedia - E-learning Data Engineering
-
 _Nicolas Andres Fuentes - DNI 40.771.299_
 
 Es una app que obtiene informacion de una API del clima, el cual se extrae informacion del clima de ciudades y se transforma para obtener datos limpios.
 
-La api utilizada es AccuWeather API: https://developer.accuweather.com/
-Cuenta con API KEY el cual esta declarada dentro del programa.
+**La api utilizada es AccuWeather API: https://developer.accuweather.com/**
 
 El programa realiza las siguientes acciones:
 
@@ -18,39 +16,34 @@ El programa realiza las siguientes acciones:
   - Se creo una nueva columna logica basada en datos obtenidos (columna indicacion de funcion agregar_condicion_abrigo)
   - Cruzar dataframes utilizando MERGE (Agregando columna de indicacion a los metadatos de las ciudades)
 
-### Importaciones e instalaciones necesarias
+---
 
-#### Instalaciones
+## Importaciones e instalaciones necesarias
 
+En los archivos del programa, se encuentra los modulos necesarios para su ejecución.
 Para ejecutar correctamente el programa se debe instalar los siguientes requerimientos:
 
 ```bash
 pip install -r requirements.txt
 ```
 
+> [!IMPORTANT]
+> Hay un archivo llamado config.py donde esta guardada la información sensible para el correcto funcionamiento de la aplicación.
+
 ## Modulos
 
 El programa esta desarollado de forma modular y funcional, separado en 4 archivos de los cuales 3 son funcionalidades y uno solo "main.py" el cual se utiliza como archivo principal de ejecución.
 A continuacion detallamos cada uno de los modulos:
 
-## config.py
-
-Es un archivo que se encuentra la informacion sensible para la ejecución normal de la aplicacion.
-En ella se pueden modificar segun las necesidasdes.
-
 ## get_data.py
 
 Este archivo contiene funciones para interactuar con la API de WeatherAPI y obtener información sobre metadatos de ciudades y detalles del clima actual. A continuación, se describe cada función y sus argumentos.
-
----
 
 _Variables Globales_
 
 - **`BASE_URL`**: URL base de la API de WeatherAPI.
 - **`ENDPOINT_CLIMA`**: Endpoint indicado por la API el cual obtendra los datos del clima actuales.
 - **`ENDPOINT_METADATOS`**: Endpoint indicado por la API el cual obtendra los metadatos de la ciudad indicada.
-
----
 
 ### Funciones
 
@@ -63,8 +56,6 @@ Obtiene los metadatos de una ciudad específica, como país, estado, latitud y l
 - **Retorno**:
   - _dict_: Diccionario con los metadatos de la ciudad.
 
----
-
 #### `obtener_clima(ciudad: str)`
 
 Obtiene los datos del clima actual para la ciudad indicada en el argumento.
@@ -74,8 +65,6 @@ Obtiene los datos del clima actual para la ciudad indicada en el argumento.
 - **Retorno**:
   - _dict_: Diccionario con los datos del clima de la ciudad indicada.
 
----
-
 #### `obtener_ultimo_parquet(ruta: str)`
 
 Retorna el ultimo archivo .parquet generado, a fin de obtener los ultimos datos recibidos.
@@ -84,8 +73,6 @@ Retorna el ultimo archivo .parquet generado, a fin de obtener los ultimos datos 
   - `ruta` (_str_): Ruta del DeltaLake donde se encuentran los archivos parquet.
 - **Retorno**:
   - _str_: Nombre del ultimo archivo parquet generado.
-
----
 
 ## storage.py
 
@@ -103,8 +90,6 @@ Crea un DataFrame de Pandas a partir de un JSON, con la posibilidad de especific
 - **Retorno**:
   - _DataFrame_: DataFrame de Pandas generado a partir del JSON.
 
----
-
 #### `guardar_deltalake(datos, path, mode="ignore")`
 
 Crea un DeltaLake a partir de un DataFrame de Pandas y lo guarda en la ruta especificada.
@@ -116,8 +101,6 @@ Crea un DeltaLake a partir de un DataFrame de Pandas y lo guarda en la ruta espe
 - **Retorno**:
   - _DeltaLake_: DeltaLake generado a partir de un DataFrame de pandas
 
----
-
 #### `nuevo_registro_deltalake(nuevo_df, path)`
 
 Genera un nuevo registro en el archivo .parquet que se encuentra en la ruta.
@@ -128,8 +111,6 @@ Lee los datos del ultimo archivo, y concatena con los nuevos datos recibidos.
   - `path` (_str, optional_): Ruta donde se crea el archivo Parquet del DeltaLake
 - **Retorno**:
   - _DeltaLake_: DeltaLake generado a partir de un DataFrame de pandas
-
----
 
 ## transform.py
 
@@ -145,8 +126,6 @@ Normaliza un DataFrame eliminando columnas innecesarias, renombrando las columna
 - **Retorno**:
   - _DataFrame_: Retorna un Dataframe con limpieza de columnas, renombramiento de columnas y tipos de datos modificados.
 
----
-
 #### `indicacion_pronostico(df)`
 
 Agrega una columna de indicaciones especiales segun los datos obtenidos del DataFrame.
@@ -157,15 +136,11 @@ Se basa en la temperatura, sensacion termica, humedad, indice UV y nubosidad.
 - **Retorno**:
   - _DataFrame_: Retorna un Dataframe limpio con un agregado de columna que da indicaciones segun logicas obtenidas de datos meteorologicos.
 
----
-
-# main.py - Documentación
+## main.py
 
 Este archivo es el punto de entrada principal del programa. Contiene la lógica para obtener, transformar y almacenar datos meteorológicos utilizando los módulos auxiliares `get_data.py`, `storage.py` y `transform.py`.
 
----
-
-## Funciones
+### Funciones
 
 #### `pronostico_ciudades()`
 
@@ -173,8 +148,6 @@ Obtiene el clima de las ciudades guardadas en el DeltaLake y genera información
 
 - **Retorno**:
   - _Parquet de DeltaLake_: DeltaLake con el pronóstico del clima de las ciudades.
-
----
 
 #### `registro_clima(ciudad: str)`
 
@@ -184,8 +157,6 @@ Obtiene los datos del clima de una ciudad específica desde Bronze y los guarda 
   - `ciudad` (_str_): Nombre de la ciudad para la cual se desea registrar el clima.
 - **Retorno**:
   - _DeltaLake_: DeltaLake con el clima registrado de la ciudad.
-
----
 
 ## Ejecución Principal
 
@@ -200,8 +171,6 @@ El bloque principal del archivo ejecuta las siguientes acciones:
    - Se genera un pronóstico del clima para las ciudades y se almacena en el DeltaLake en la ruta `data/accuweather_api/silver/pronostico_ciudades`.
 5. **Registro de clima por ciudad**:
    - Se registra el clima de ciudades específicas (por ejemplo, "Tilcara", "San Miguel", "Oslo") y se almacena en el DeltaLake en rutas específicas.
-
----
 
 ## Ejemplo de Ejecución
 
@@ -230,6 +199,6 @@ if __name__ == "__main__":
 
     # Registro de clima por ciudad
     registro_clima("Tilcara")
-    registro_clima("San Miguel")
+    registro_clima("San Miguel") #El mismo dara error debido a que 'San Miguel' no se encuentra dentro de los DataLakes.
     registro_clima("Oslo")
 ```

@@ -28,6 +28,8 @@ def guardar_deltalake(datos, path, mode="ignore"):
     :type datos: DataFrame de Pandas
     :param path: Ruta donde se crea el archivo Parquet del DeltaLake
     :type path: str
+    :param mode: Modo de escritura en el DeltaLake
+    :type mode: str
     """
     try:
         df = pd.DataFrame(datos)
