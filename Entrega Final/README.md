@@ -1,4 +1,4 @@
-# Segunda entrega intermedia - E-learning Data Engineering
+# Entrega Final - E-learning Data Engineering
 _Nicolas Andres Fuentes - DNI 40.771.299_
 
 Es una app que obtiene informacion de una API del clima, el cual se extrae informacion del clima de ciudades y se transforma para obtener datos limpios.
